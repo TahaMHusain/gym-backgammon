@@ -24,11 +24,10 @@
 
 ---
 ## <a name="gym_backgammon"></a>gym-backgammon
-The backgammon game is a 2-player game that involves both the movement of the checkers and also the roll of the dice. The goal of each player is to move all of his checkers off the board.  
+Nannon is a 2-player game that involves both the movement of the checkers and also the roll of the dice. The goal of each player is to move all of his checkers off the board. Nannon is a smaller version of the original game of backgammon.
 
-This repository contains a Backgammon game implementation in OpenAI Gym.   
-Given the current state of the board, a roll of the dice, and the current player, it computes all the legal actions/moves (iteratively) that the current player can execute.  The legal actions are generated in a such a way that they uses the highest number of dice (if possible) for that state and player.  
-
+This repository contains a Nannon game implementation in OpenAI Gym.   
+Given the current state of the board, a roll of the dice, and the current player, it computes all the legal actions/moves (iteratively) that the current player can execute.
 ---
 ## <a name="installation"></a>Installation
 ```
@@ -41,65 +40,33 @@ pip3 install -e .
 ## <a name="env"></a>Environment
 The encoding used to represent the state is inspired by the one used by Gerald Tesauro[1].
 ### <a name="observation"></a>Observation
-Type: Box(198)
+Type: Box(14)
 
-| Num       | Observation                                                         | Min  | Max  |
-| --------- | -----------------------------------------------------------------   | ---- | ---- |
-| 0         | WHITE - 1st point, 1st component                                    | 0.0  | 1.0  |
-| 1         | WHITE - 1st point, 2nd component                                    | 0.0  | 1.0  |
-| 2         | WHITE - 1st point, 3rd component                                    | 0.0  | 1.0  |
-| 3         | WHITE - 1st point, 4th component                                    | 0.0  | 6.0  |
-| 4         | WHITE - 2nd point, 1st component                                    | 0.0  | 1.0  |
-| 5         | WHITE - 2nd point, 2nd component                                    | 0.0  | 1.0  |
-| 6         | WHITE - 2nd point, 3rd component                                    | 0.0  | 1.0  |
-| 7         | WHITE - 2nd point, 4th component                                    | 0.0  | 6.0  |
-| ...       |                                                                     |      |      |
-| 92        | WHITE - 24th point, 1st component                                   | 0.0  | 1.0  |
-| 93        | WHITE - 24th point, 2nd component                                   | 0.0  | 1.0  |
-| 94        | WHITE - 24th point, 3rd component                                   | 0.0  | 1.0  |
-| 95        | WHITE - 24th point, 4th component                                   | 0.0  | 6.0  |
-| 96        | WHITE - BAR checkers                                                | 0.0  | 7.5  |
-| 97        | WHITE - OFF bar checkers                                            | 0.0  | 1.0  |
-| 98        | BLACK - 1st point, 1st component                                    | 0.0  | 1.0  |
-| 99        | BLACK - 1st point, 2nd component                                    | 0.0  | 1.0  |
-| 100       | BLACK - 1st point, 3rd component                                    | 0.0  | 1.0  |
-| 101       | BLACK - 1st point, 4th component                                    | 0.0  | 6.0  |
-| ...       |                                                                     |      |      |
-| 190       | BLACK - 24th point, 1st component                                   | 0.0  | 1.0  |
-| 191       | BLACK - 24th point, 2nd component                                   | 0.0  | 1.0  |
-| 192       | BLACK - 24th point, 3rd component                                   | 0.0  | 1.0  |
-| 193       | BLACK - 24th point, 4th component                                   | 0.0  | 6.0  |
-| 194       | BLACK - BAR checkers                                                | 0.0  | 7.5  |
-| 195       | BLACK - OFF bar checkers                                            | 0.0  | 1.0  |
-| 196 - 197 | Current player                                                      | 0.0  | 1.0  |
+| Num   | Observation                	 | Min | Max |
+| ----- | ----------------------------   | --- | --- |
+| 0     | WHITE - HOME			         |  0  |  3  |
+| 1     | WHITE - 1st point              |  0  |  1  |
+| 2     | WHITE - 2nd point              |  0  |  1  |
+| 3     | WHITE - 3rd point              |  0  |  1  |
+| 4     | WHITE - 4th point              |  0  |  1  |
+| 5     | WHITE - 5th point              |  0  |  1  |
+| 6     | WHITE - 6th point              |  0  |  1  |
+| 7		| BLACK - HOME					 |  0  |  3  |
+| 8		| BLACK - 1st point              |  0  |  1  |
+| 9	    | BLACK - 2nd point              |  0  |  1  |
+| 10	| BLACK - 3rd point              |  0  |  1  |
+| 11	| BLACK - 4th point              |  0  |  1  |
+| 12	| BLACK - 5th point              |  0  |  1  |
+| 13	| BLACK - 6th point              |  0  |  1  |
+| 14	| Current player                 |  0  |  1  |
 
-Encoding of a single point (it indicates the number of checkers in that point):
-
-| Checkers | Encoding                                |           
-| -------- | --------------------------------------- |
-| 0        | [0.0, 0.0, 0.0, 0.0]                    |
-| 1        | [1.0, 0.0, 0.0, 0.0]                    |
-| 2        | [1.0, 1.0, 0.0, 0.0]                    |
-| >= 3     | [1.0, 1.0, 1.0, (checkers - 3.0) / 2.0] |
-
-Encoding of BAR checkers:
-
-| Checkers | Encoding             |           
-| -------- | -------------------- |
-| 0 - 14   | [bar_checkers / 2.0] |
-
-Encoding of OFF bar checkers:
-
-| Checkers | Encoding              |           
-| -------- | --------------------- |
-| 0 - 14   | [off_checkers / 15.0] |
 
 Encoding of the current player:
 
 | Player  | Encoding   |           
 | ------- | ---------- |
-| WHITE   | [1.0, 0.0] |
-| BLACK   | [0.0, 1.0] |
+| WHITE   |    [0]	   |
+| BLACK   |    [1]    |
 
 ### <a name="actions"></a>Actions
 The valid actions that an agent can execute depend on the current state and the roll of the dice. So, there is no fixed shape for the action space.  
@@ -110,26 +77,16 @@ The valid actions that an agent can execute depend on the current state and the 
 ### <a name="starting_state"></a>Starting State
 All the episodes/games start in the same [starting position](#starting_position): 
 ```
-| 12 | 13 | 14 | 15 | 16 | 17 | BAR | 18 | 19 | 20 | 21 | 22 | 23 | OFF |
-|--------Outer Board----------|     |-------P=O Home Board--------|     |
-|  X |    |    |    |  O |    |     |  O |    |    |    |    |  X |     |
-|  X |    |    |    |  O |    |     |  O |    |    |    |    |  X |     |
-|  X |    |    |    |  O |    |     |  O |    |    |    |    |    |     |
-|  X |    |    |    |    |    |     |  O |    |    |    |    |    |     |
-|  X |    |    |    |    |    |     |  O |    |    |    |    |    |     |
-|-----------------------------|     |-----------------------------|     |
-|  O |    |    |    |    |    |     |  X |    |    |    |    |    |     |
-|  O |    |    |    |    |    |     |  X |    |    |    |    |    |     |
-|  O |    |    |    |  X |    |     |  X |    |    |    |    |    |     |
-|  O |    |    |    |  X |    |     |  X |    |    |    |    |  O |     |
-|  O |    |    |    |  X |    |     |  X |    |    |    |    |  O |     |
-|--------Outer Board----------|     |-------P=X Home Board--------|     |
-| 11 | 10 |  9 |  8 |  7 |  6 | BAR |  5 |  4 |  3 |  2 |  1 |  0 | OFF |
+
+|      |-----------------------|      |
+|      |   |   |   |   |   |   |      |
+|   O  | O | O |   |   | X | X |  X   |
+|      |-------- Board --------|      |
+| HOME | 1 | 2 | 3 | 4 | 5 | 6 | HOME | 
 ```
 
 ### <a name="episode_termination"></a>Episode Termination
 1. One of the 2 players win the game
-2. Episode length is greater than 10000
 
 
 ### <a name="reset"></a>Reset
@@ -167,48 +124,21 @@ Each tuple represents a move in the form `(source, target)`
 #### NOTE:
 The actions of asking a double and accept/reject a double are not available.  
 
-Given the following configuration ([starting position](#starting_position), `BLACK` player in turn, `roll = (1, 3)`):
+Given the following configuration ([starting position](#starting_position), `WHITE` player in turn, `roll = 2`):
 ```
-| 12 | 13 | 14 | 15 | 16 | 17 | BAR | 18 | 19 | 20 | 21 | 22 | 23 | OFF |
-|--------Outer Board----------|     |-------P=O Home Board--------|     |
-|  X |    |    |    |  O |    |     |  O |    |    |    |    |  X |     |
-|  X |    |    |    |  O |    |     |  O |    |    |    |    |  X |     |
-|  X |    |    |    |  O |    |     |  O |    |    |    |    |    |     |
-|  X |    |    |    |    |    |     |  O |    |    |    |    |    |     |
-|  X |    |    |    |    |    |     |  O |    |    |    |    |    |     |
-|-----------------------------|     |-----------------------------|     |
-|  O |    |    |    |    |    |     |  X |    |    |    |    |    |     |
-|  O |    |    |    |    |    |     |  X |    |    |    |    |    |     |
-|  O |    |    |    |  X |    |     |  X |    |    |    |    |    |     |
-|  O |    |    |    |  X |    |     |  X |    |    |    |    |  O |     |
-|  O |    |    |    |  X |    |     |  X |    |    |    |    |  O |     |
-|--------Outer Board----------|     |-------P=X Home Board--------|     |
-| 11 | 10 |  9 |  8 |  7 |  6 | BAR |  5 |  4 |  3 |  2 |  1 |  0 | OFF |
+|      |-----------------------|      |
+|      |   |   |   |   |   |   |      |
+|   O  | O | O |   |   | X | X |  X   |
+|      |-------- Board --------|      |
+| HOME | 1 | 2 | 3 | 4 | 5 | 6 | HOME | 
 
-Current player=1 (O - Black) | Roll=(1, 3)
+Current player=1 (O - WHITE) | Roll=(1, 3)
 ```
 The legal actions are:
 ```
 Legal Actions:
-((11, 14), (14, 15))
-((0, 1), (11, 14))
-((18, 19), (18, 21))
-((11, 14), (18, 19))
-((0, 1), (0, 3))
-((0, 1), (16, 19))
-((16, 17), (16, 19))
-((18, 19), (19, 22))
-((0, 1), (18, 21))
-((16, 17), (18, 21))
-((0, 3), (18, 19))
-((16, 19), (18, 19))
-((16, 19), (19, 20))
-((0, 1), (1, 4))
-((16, 17), (17, 20))
-((0, 3), (16, 17))
-((18, 21), (21, 22))
-((0, 3), (3, 4))
-((11, 14), (16, 17))
+(2, 4)
+(1, 3)
 ```
 ---
 
