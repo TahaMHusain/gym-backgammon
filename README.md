@@ -44,16 +44,16 @@ Type: Box(14)
 
 | Num   | Observation                	 | Min | Max |
 | ----- | ----------------------------   | --- | --- |
-| 0     | WHITE - HOME			         |  0  |  3  |
+| 0     | WHITE - HOME			 |  0  |  3  |
 | 1     | WHITE - 1st point              |  0  |  1  |
 | 2     | WHITE - 2nd point              |  0  |  1  |
 | 3     | WHITE - 3rd point              |  0  |  1  |
 | 4     | WHITE - 4th point              |  0  |  1  |
 | 5     | WHITE - 5th point              |  0  |  1  |
 | 6     | WHITE - 6th point              |  0  |  1  |
-| 7		| BLACK - HOME					 |  0  |  3  |
-| 8		| BLACK - 1st point              |  0  |  1  |
-| 9	    | BLACK - 2nd point              |  0  |  1  |
+| 7	| BLACK - HOME			 |  0  |  3  |
+| 8	| BLACK - 1st point              |  0  |  1  |
+| 9	| BLACK - 2nd point              |  0  |  1  |
 | 10	| BLACK - 3rd point              |  0  |  1  |
 | 11	| BLACK - 4th point              |  0  |  1  |
 | 12	| BLACK - 5th point              |  0  |  1  |
@@ -63,10 +63,10 @@ Type: Box(14)
 
 Encoding of the current player:
 
-| Player  | Encoding   |           
+| Player  | Encoding   |
 | ------- | ---------- |
-| WHITE   |    [0]	   |
-| BLACK   |    [1]    |
+| WHITE   |    [0]     |
+| BLACK   |    [1]     |
 
 ### <a name="actions"></a>Actions
 The valid actions that an agent can execute depend on the current state and the roll of the dice. So, there is no fixed shape for the action space.  
